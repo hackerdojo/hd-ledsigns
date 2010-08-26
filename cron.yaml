@@ -1,0 +1,4 @@
+cron:
+- description: reset all signs at 4AM pacific time
+  url: /reset
+  schedule: every day 11:00

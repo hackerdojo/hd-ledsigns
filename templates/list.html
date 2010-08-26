@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+  <head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+    <title>Hacker Dojo Signs</title> 
+    <link href='http://fonts.googleapis.com/css?family=Nobile' rel='stylesheet' type='text/css'> 
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
+    <style>
+th,td {font-size:13px; padding:2px; border-right:1px solid #ccc; border-bottom:1px solid #ccc;  padding-left:4px; text-align:center}
+th:first-child,td:first-child {border-left:1px solid #ccc; padding-right:2px; text-align:left }
+tr:first-child {background:#f2f3fa}
+p,li,input,h1,h2,h3,h4,h5,tr:first-child,th:first-child,td:first-child {font-family:'Nobile' arial, sans-serif;}
+h1 {font-size:34px;margin-top:0}
+h4 {margin-bottom:.75em}
+th {font-weight:bold; }
+th {border-top:1px solid #ccc}
+tr:hover {background:#f6f7fe}
+html  {height:100%}
+#content {width:600px; margin:4em auto; padding:3em}
+textarea {width:100%}
+body { background: #ddd; background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff)); }
+#content { background: #fff; -webkit-box-shadow: 4px 4px 32px #666;  }
+</style>
+</head> 
+<body> 
+
+<div id="content"> 
+  
+
+<h1>Hacker Dojo Signs</h1>
+
+<form method=post>
+
+
+<table cellspacing=0 cellpadding=0 width=100%>
+<tr>
+<th>Sign</td>
+<th>Editable Text</th>
+<th>Preview</th>
+</tr>
+
+{% for sign in signs %}
+   <tr>
+   
+   <td>{{ sign.name }}</td>
+   <td><textarea id="{{sign.key}}" name="{{sign.key}}" cols=30 style="width:200px;  border:none" rows=2>{% if sign.message %}{{ sign.message }}{% else %}{{ sign.default_msg }}{% endif %}</textarea></td>
+   <td width=200><div style="color:red; margin:4px; background:#280000; overflow:hidden; font-family:courier; width:190px; height:30px; border:3px solid #999; padding:6px; text-align:center" id="display-{{sign.key}}"></div></td>
+ 
+   </tr>
+   
+{% endfor %}
+</table>
+
+
+<br/><br/>
+
+<input type=submit value="Save" />
+</form>
+
+<p style="margin-top:3em;font-size:12px"><i>All signs reset at 4AM each day.</i></p>
+
+</div>      
+  
+<script>
+
+var max_oneline = 9;
+var max_twoline = 17;
+
+$(document).ready(function() {
+  $("textarea").change(function() {
+    update($(this).attr("id"))
+  });
+  $("textarea").keyup(function() {
+    update($(this).attr("id"))
+  });
+  $.each( $("textarea"), function(k,id){
+    update($(id).attr("id"))
+  });
+ 
+});
+
+function update(id) {
+  var src = $("#"+id);
+  var dest = $("#display-"+id);
+  
+  var msg = src.val();
+  var double_rainbow = msg.indexOf("\n") > 0;
+  
+  if (double_rainbow) {
+     lines = msg.split("\n");
+     for (i=0;i<2;i++) {
+       if (lines[i].length>max_twoline) {
+         lines[i] = "<div><nobr><marquee>"+lines[i]+"</marquee></nobr></div>";      
+       } else {
+         lines[i] = "<div><nobr>"+lines[i]+"</nobr></div>";      
+       }
+     }
+     dest.html(lines[0]+lines[1]); 
+     dest.css("font-size","16px");
+  } else {
+    if (msg.length>max_oneline) {
+      dest.html("<marquee style='font-size:35px; height:100%'>"+msg+"</marquee>"); 
+    } else {
+      dest.html(msg); 
+    }      
+    dest.css("font-size","35px");    
+  }
+}
+
+</script>
+</body> 
+</html>
+
+
+
