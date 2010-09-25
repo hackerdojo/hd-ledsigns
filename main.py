@@ -65,7 +65,7 @@ class ResetHandler(webapp.RequestHandler):
     for m in Sign.all().fetch(100):
       m.message = m.default_msg
       m.changed = True
-      m.who = null
+      m.who = None
       m.put()
     self.response.out.write("OK")
 
